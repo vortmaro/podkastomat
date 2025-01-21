@@ -25,7 +25,6 @@ if not options.generate:
 audioFiles = files.findAudio()
 for audioFile in audioFiles:
     print(f"Audio: {audioFile}")
-    continue
     language = files.getLangCode(audioFile)
     if not files.hasTranscript(audioFile):
         files.generateFromAudio(audioFile, 'transcribe')
