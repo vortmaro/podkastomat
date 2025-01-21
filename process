@@ -1,0 +1,35 @@
+#!/usr/bin/python3
+
+import inspect
+import lib.args as args
+import lib.config as cfg
+import lib.files as files
+import lib.rss as rss
+
+config = cfg.load()
+options = args.read()
+
+for podcast in config['podcasts']:
+    if options.filter and not options.filter in podcast['name'].lower():
+        continue
+    files.addRef(podcast)
+    rss.fetch(podcast, options.loadFeed)
+    if options.downloadEpisodes:
+        eps = rss.getEpisodes(podcast, options.episodes, options.numEpisodes)
+        for ep in eps:
+            print(ep)
+            files.saveEpisode(podcast, ep)
+
+if not options.generate:
+    exit(0)
+audioFiles = files.findAudio()
+for audioFile in audioFiles:
+    print(f"Audio: {audioFile}")
+    continue
+    language = files.getLangCode(audioFile)
+    if not files.hasTranscript(audioFile):
+        files.generateFromAudio(audioFile, 'transcribe')
+    if language in config['translate'] and not files.hasTranslation(audioFile):
+        files.generateFromAudio(audioFile, 'translate')
+
+

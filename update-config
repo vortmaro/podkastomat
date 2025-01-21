@@ -1,0 +1,64 @@
+#!/usr/bin/python3
+#
+# Commangs:
+#
+# translate lang
+#     Add a language to translate into
+#     E.g.: translate ru
+#
+# add
+#     Add a new podcast
+#     You will be prompted for the name, language, and URL of the podcast
+
+import lib.config as cfg
+import json
+import sys
+
+config = cfg.load()
+
+cmd = ''
+try:
+    cmd = sys.argv[1]
+except:
+    pass
+
+# Command to add a language to translate (in addition to generating a transcript)
+if cmd == 'translate':
+    try:
+        lang = sys.argv[2]
+    except:
+        sys.stderr.write("Must specify the language\n")
+        sys.exit(2)
+    config['translate'].append(lang)
+    cfg.save(config)
+    sys.exit(0)
+
+# Command to add podcast (Name, Language, URL)
+elif cmd == 'add':
+    podcast = {}
+    print('Podcast name: ', end=None)
+    podcast['name'] = sys.stdin.readline().strip()
+    print('Language: ', end=None)
+    podcast['lang'] = sys.stdin.readline().strip()
+    print('RSS URL: ', end=None)
+    podcast['url'] = sys.stdin.readline().strip()
+    config['podcasts'].append(podcast)
+    configFile = open('config.json', 'w', encoding='utf-8')
+    json.dump(config, configFile, indent=4)
+    configFile.write('\n')
+    configFile.close()
+    sys.exit(0)
+else:
+    print("Unrecognised command: '" + cmd + "'. Usage:")
+    print("")
+    print("./update-config translate lang")
+    print("    E.g. ./update-config translate de")
+    print("    Translate podcasts in the specified language")
+    print("    For the list of supported languages, check Whisper")
+    print("")
+    print("./update-config add")
+    print("    Add a new podcast which is to be transcribed and possibly translated")
+    print("    This is interactive and will ask for the name, language, and RSS URL for the podcast")
+    sys.exit(1)
+
+
