@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import inspect
 import lib.args as args
 import lib.config as cfg
 import lib.files as files
