@@ -22,11 +22,18 @@ if not options.generate:
     exit(0)
 audioFiles = files.findAudio()
 for audioFile in audioFiles:
-    print(f"Audio: {audioFile}")
+    audioLength = files.getAudioLength(audioFile)
     language = files.getLangCode(audioFile)
+    skipped = True
     if not files.hasTranscript(audioFile):
+        skipped = False
+        print(f"Transcribing audio: {audioFile} ({audioLength})", flush=True)
         files.generateFromAudio(audioFile, 'transcribe')
     if language in config['translate'] and not files.hasTranslation(audioFile):
+        skipped = False
+        print(f"Translating audio: {audioFile} ({audioLength})", flush=True)
         files.generateFromAudio(audioFile, 'translate')
+    if skipped and options.verbose:
+        print(f"Skipped audio: {audioFile} ({audioLength})")
 
 

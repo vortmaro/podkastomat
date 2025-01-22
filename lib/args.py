@@ -4,6 +4,7 @@ import sys
 isNumber = re.compile('^[0-9]+$')
 
 class Options:
+    verbose = False
     loadFeed = True
     downloadEpisodes = True
     generate = True
@@ -56,6 +57,8 @@ def read():
             opts.downloadEpisodes = False
         elif arg == "--no-gen" or arg == "--skip-gen":
             opts.generate = False
+        elif arg == "--verbose":
+            opts.verbose = True
         elif arg == 'new':
             opts.episodes = 'new'
         elif arg == 'old':

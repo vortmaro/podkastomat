@@ -1,6 +1,7 @@
 import glob
 import re
 import lib.fetcher as fetcher
+import mutagen
 import os
 import os.path
 
@@ -75,6 +76,19 @@ def saveEpisode(podcast, episode):
 
 def findAudio():
     return glob.glob('podcasts/*/*/*.m[4p][a3]')
+
+def getAudioLength(audioFile):
+    audio = mutagen.File(audioFile)
+    totalLength = audio.info.length
+    hours = int(totalLength // 3600)
+    totalLength -= 3600 * hours
+    minutes = int(totalLength // 60)
+    totalLength -= 60 * minutes
+    seconds = int(totalLength)
+    if hours == 0:
+        return f"{minutes}:{seconds}"
+    else:
+        return f"{hours}:{minutes}:{seconds}"
 
 def getLangCode(audioFile):
     parts = audioFile.split('/')
