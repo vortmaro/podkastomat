@@ -20,7 +20,14 @@ def extractField(node, childNodeName):
     return children[0].firstChild.data
 
 def getEpisodes(podcast, episodesFrom, numEpisodes):
-    print(f"Getting latest episode from {podcast['name']}")
+    episodeGroup = ''
+    if episodesFrom == 'old':
+        episodeGroup = 'earliest episode'
+    else:
+        episodeGroup = 'latest episode'
+    if numEpisodes != 1:
+        episodeGroup += 's'
+    print(f"Getting {episodeGroup} from {podcast['name']}")
     doc = minidom.parse(podcast['feed'])
     root = doc.getElementsByTagName('channel')[0]
     epNodes = root.getElementsByTagName('item')
