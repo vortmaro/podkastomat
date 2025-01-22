@@ -62,7 +62,7 @@ def read():
             opts.episodes = 'old'
         elif isNumber.match(arg):
             opts.numEpisodes = int(arg)
-        elif opts.filter == None:
+        elif opts.filter == None and arg[0:2] != '--':
             opts.filter = arg.lower()
         else:
             print(f"Unrecognised argument: {arg}")
