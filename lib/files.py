@@ -114,4 +114,4 @@ def generateFromAudio(audioFile, task):
     generatedFile = replaceExtension(fileName, 'vtt')
     newFileName = replaceExtension(fileName, newExt)
     os.rename(generatedFile, newFileName)
-    os.chdir('../..')
+    os.chdir('../../..')
