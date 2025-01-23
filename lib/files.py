@@ -131,6 +131,6 @@ def generateFromAudio(audioFile, task, options):
         os.system(cmd)
 
         # rename transcript/translation file generated
-        generatedFile = replaceExtension(fileName, 'vtt')
+        generatedFile = replaceExtension(fileName, 'srt')
         os.rename(generatedFile, newFileName)
     os.chdir('../../..')
