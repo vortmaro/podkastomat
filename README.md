@@ -1,8 +1,10 @@
 # Podkastomat
 
-🧰 A tool for automatically downloading and transcribing podcasts, with the option to translate them into English.
+🪛 A tool for automatically downloading and transcribing podcasts, with the option to translate them into English.
 
 📚 Built for language learners.
+
+Don't have any podcasts to listen to? [Try some of these](podcasts.md).
 
 ## Usage
 
