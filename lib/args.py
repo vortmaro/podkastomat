@@ -24,6 +24,8 @@ def outputHelp():
     print("    Skip downloading podcast episodes")
     print("--no-gen, --skip-gen")
     print("    Skip generating transcripts and translations of podcast episodes")
+    print("--verbose")
+    print("    Output a detailed report of actions as they are being taken")
     print("")
     print("filter:")
     print("    If specified, only configured podcasts which match the filter will be processed")
