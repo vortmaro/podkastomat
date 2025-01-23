@@ -109,7 +109,7 @@ def hasTranslation(audioFile):
     translationFile = getTranslationFilename(audioFile)
     return os.path.isfile(translationFile)
 
-def generateFromAudio(audioFile, task):
+def generateFromAudio(audioFile, task, options):
     if task == 'transcribe':
         newExt = 'transcript.txt'
     else:
@@ -119,14 +119,18 @@ def generateFromAudio(audioFile, task):
     langCode = getLangCode(audioFile)
     fileParts = audioFile.split('/')
     fileName = fileParts.pop()
+    newFileName = replaceExtension(fileName, newExt)
     dir = '/'.join(fileParts)
     os.chdir(dir)
 
-    cmd = f"whisper {fileName} --model medium --language {langCode} --task {task} --output_format vtt --fp16 False"
-    os.system(cmd)
+    if options.tts == 'vosk' or langCode == 'eo':
+        cmd = f"vosk-transcriber -i {fileName} -l {langCode} -t srt -o {newFileName}"
+        os.system(cmd)
+    else:
+        cmd = f"whisper {fileName} --model medium --language {langCode} --task {task} --output_format srt --fp16 False"
+        os.system(cmd)
 
-    # rename transcript/translation file generated
-    generatedFile = replaceExtension(fileName, 'vtt')
-    newFileName = replaceExtension(fileName, newExt)
-    os.rename(generatedFile, newFileName)
+        # rename transcript/translation file generated
+        generatedFile = replaceExtension(fileName, 'vtt')
+        os.rename(generatedFile, newFileName)
     os.chdir('../../..')

@@ -11,6 +11,7 @@ class Options:
     filter = None
     episodes = 'new'
     numEpisodes = 1
+    tts = 'whisper'
 
 def outputHelp():
     print("Usage: ./process [args] [filter [age] [episodes]]")
@@ -26,6 +27,8 @@ def outputHelp():
     print("    Skip generating transcripts and translations of podcast episodes")
     print("--verbose")
     print("    Output a detailed report of actions as they are being taken")
+    print("--vosk")
+    print("    Use Vosk instead of Whisper to generate transcripts")
     print("")
     print("filter:")
     print("    If specified, only configured podcasts which match the filter will be processed")
@@ -61,6 +64,8 @@ def read():
             opts.generate = False
         elif arg == "--verbose":
             opts.verbose = True
+        elif arg == '--vosk':
+            opts.tts = 'vosk'
         elif arg == 'new':
             opts.episodes = 'new'
         elif arg == 'old':

@@ -30,11 +30,13 @@ for audioFile in audioFiles:
     if not files.hasTranscript(audioFile):
         skipped = False
         print(f"Transcribing audio: {audioFile} ({audioLength})", flush=True)
-        files.generateFromAudio(audioFile, 'transcribe')
-    if language in config['translate'] and not files.hasTranslation(audioFile):
+        files.generateFromAudio(audioFile, 'transcribe', options)
+    if (language in config['translate'] and not files.hasTranslation(audioFile)
+        and language != 'eo' and options.tts != 'vosk'
+    ):
         skipped = False
         print(f"Translating audio: {audioFile} ({audioLength})", flush=True)
-        files.generateFromAudio(audioFile, 'translate')
+        files.generateFromAudio(audioFile, 'translate', options)
     if skipped and options.verbose:
         print(f"Skipped audio: {audioFile} ({audioLength})")
 
