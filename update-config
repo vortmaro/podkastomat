@@ -38,10 +38,15 @@ elif cmd == 'add':
     podcast = {}
     print('Podcast name: ', end=None)
     podcast['name'] = sys.stdin.readline().strip()
-    print('Language: ', end=None)
+    print('Language: (ISO 639-1 two-letter code)')
     podcast['lang'] = sys.stdin.readline().strip()
-    print('RSS URL: ', end=None)
+    print('RSS URL:')
     podcast['url'] = sys.stdin.readline().strip()
+    print('Auto-download episodes: (y/n)')
+    autoDownload = sys.stdin.readline().strip()
+    podcast['auto'] = True
+    if autoDownload in ['n', 'N', 'no', 'No']:
+        podcast['auto'] = False
     config['podcasts'].append(podcast)
     configFile = open('config.json', 'w', encoding='utf-8')
     json.dump(config, configFile, indent=4)
