@@ -32,7 +32,7 @@ def replaceExtension(fileName, newExtension):
     parts.pop()
     return '.'.join(parts) + '.' + newExtension
 
-def saveEpisode(podcast, episode):
+def saveEpisode(podcast, episode, options):
     match = startingNumerals.match(episode['title'])
     if episode['episode']:
         # Episode (& possibly season) number encoded in the RSS
@@ -69,9 +69,10 @@ def saveEpisode(podcast, episode):
             episodeName += ' - ' + episode['subtitle']
         episodeRef = getRef(episodeName)
         fileName = f"{episodeRef}.{ext}"
-        print(f"Downloading episode {identifier} of {podcast['name']} as {fileName}")
+        if options.verbose:
+            print(f"Downloading episode {identifier} of {podcast['name']} as {fileName}")
         fetcher.download(episode['url'], f"{podcast['dir']}/{fileName}")
-    else:
+    elif options.verbose:
         print(f"Episode {identifier} of {podcast['name']} has been downloaded previously; skipping")
 
 def findAudio():

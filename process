@@ -16,7 +16,7 @@ for podcast in config['podcasts']:
     if options.downloadEpisodes:
         eps = rss.getEpisodes(podcast, options.episodes, options.numEpisodes)
         for ep in eps:
-            files.saveEpisode(podcast, ep)
+            files.saveEpisode(podcast, ep, options)
 
 if not options.generate:
     exit(0)
