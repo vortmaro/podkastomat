@@ -11,6 +11,8 @@ options = args.read()
 for podcast in config['podcasts']:
     if options.filter and not options.filter in podcast['name'].lower():
         continue
+    elif not options.filter and podcast['auto'] == False:
+        continue
     files.addRef(podcast)
     rss.fetch(podcast, options.loadFeed)
     if options.downloadEpisodes:
