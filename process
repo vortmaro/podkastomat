@@ -27,16 +27,25 @@ for audioFile in audioFiles:
     audioLength = files.getAudioLength(audioFile)
     language = files.getLangCode(audioFile)
     skipped = True
+
+    # Generate transcript
     if not files.hasTranscript(audioFile):
         skipped = False
         print(f"Transcribing audio: {audioFile} ({audioLength})", flush=True)
         files.generateFromAudio(audioFile, 'transcribe', options)
+
+    # Generate translation
     if (language in config['translate'] and not files.hasTranslation(audioFile)
         and language != 'eo' and options.tts != 'vosk'
     ):
         skipped = False
         print(f"Translating audio: {audioFile} ({audioLength})", flush=True)
         files.generateFromAudio(audioFile, 'translate', options)
+
+    # Generate HTML variant of transcript
+    if files.hasTranscript(audioFile) and not files.hasHtml(audioFile):
+        files.generateHtml(audioFile, options)
+
     if skipped and options.verbose:
         print(f"Skipped audio: {audioFile} ({audioLength})")
 

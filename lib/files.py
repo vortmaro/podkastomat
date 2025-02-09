@@ -109,6 +109,13 @@ def hasTranslation(audioFile):
     translationFile = getTranslationFilename(audioFile)
     return os.path.isfile(translationFile)
 
+def getHtmlFilename(audioFile):
+    return replaceExtension(audioFile, 'transcript.html')
+
+def hasHtml(audioFile):
+    htmlFile = getHtmlFilename(audioFile)
+    return os.path.isfile(htmlFile)
+
 def generateFromAudio(audioFile, task, options):
     if task == 'transcribe':
         newExt = 'transcript.txt'
@@ -134,3 +141,27 @@ def generateFromAudio(audioFile, task, options):
         generatedFile = replaceExtension(fileName, 'srt')
         os.rename(generatedFile, newFileName)
     os.chdir('../../..')
+
+def generateHtml(audioFilename, options):
+    langCode = getLangCode(audioFilename)
+    htmlFilename = getHtmlFilename(audioFilename)
+    transcriptFilename = getTranscriptFilename(audioFilename)
+
+    if options.verbose:
+        print(f"Generating HTML transcript {htmlFilename}")
+
+    transcriptFile = open(transcriptFilename, 'r')
+    data = transcriptFile.read().replace('\r\n', '\n')
+    transcriptFile.close()
+
+    paragraphs = data.split('\n\n')
+    html = f"<!DOCTYPE html><html lang=\"{langCode}\"><body>"
+    if len(paragraphs) == 1:
+        html += '<p>' + paragraphs[0].replace('\n', '<br>\n') + '</p>\n'
+    else:
+        for para in paragraphs:
+            html += '<p>' + para + '</p>\n'
+    html += '</body></html>'
+    htmlFile = open(htmlFilename, 'w')
+    htmlFile.write(html)
+    htmlFile.close()

@@ -56,3 +56,13 @@ Feel free to edit the `config.json` file
 
 Whisper (used by default for transcriptions and translations) is quite slow and resource intensive.  
 It may be worth running the `process` script overnight, e.g. as a cron job.
+
+To read the transcript using [Vortmaro](https://vortmaro.org/), you can start a local server in Python by running:
+
+```sh
+python3 -m http.server
+```
+
+This will report what URL it is running on, e.g. `http://localhost:8000/`.
+
+Open the URL in a web browser, and navigate to the HTML transcript of the relevant episode.
