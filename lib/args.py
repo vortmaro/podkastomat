@@ -1,7 +1,4 @@
-import re
-import sys
-
-isNumber = re.compile('^[0-9]+$')
+import argparse
 
 class Options:
     verbose = False
@@ -13,70 +10,41 @@ class Options:
     numEpisodes = 1
     tts = 'whisper'
 
-def outputHelp():
-    print("Usage: ./process [args] [filter [age] [episodes]]")
-    print("")
-    print("args:")
-    print("--help")
-    print("    Show this help information")
-    print("--no-feed, --skip-feed")
-    print("    Skip the initial step of downloading the RSS feeds")
-    print("--no-download, --skip-download")
-    print("    Skip downloading podcast episodes")
-    print("--no-gen, --skip-gen")
-    print("    Skip generating transcripts and translations of podcast episodes")
-    print("--verbose")
-    print("    Output a detailed report of actions as they are being taken")
-    print("--vosk")
-    print("    Use Vosk instead of Whisper to generate transcripts")
-    print("")
-    print("filter:")
-    print("    If specified, only configured podcasts which match the filter will be processed")
-    print("    A filter of 'pieds sur' would match 'Les Pieds sur terre'")
-    print("")
-    print("age:")
-    print("    'new' (default), or 'old'")
-    print("    Fetch the newest or oldest episode(s) for the matching podcast(s)")
-    print("")
-    print("episodes:")
-    print("    1 by default")
-    print("    The number of episode(s) to fetch for the matching podcast(s)")
-    print("")
-    print("Examples:")
-    print("    ./process --help")
-    print("    ./process --no-feed --skip-download")
-    print("        Only process previously downloaded episodes (useful e.g. if Whisper ran out of memory,")
-    print("        or a podcast wasn't configured to translate episodes)")
-    print("    ./process 'the few' old 3")
-    print("        Download and process the first 3 episodes of 'The Few Who Do'")
+def rewireHelp(original_help):
+    def newHelp():
+        original_help()
+        print("")
+        print("Examples:")
+        print("./process --no-feed --skip-download")
+        print("    Only process previously downloaded episodes (useful e.g. if Whisper ran out of memory, or a podcast wasn't configured to translate episodes)")
+        print("./process --filter 'the few' --age old --episodes 3")
+        print("    Download and process the first 3 episodes of 'The Few Who Do'")
+    return newHelp
 
 def read():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--filter', help="If specified, only configured podcasts which match the filter will be processed. A filter of 'pieds sur' would match 'Les Pieds sur terre'")
+    parser.add_argument('--age', choices=['new', 'old'], default='new', help="Fetch the newest or oldest episode(s) for the matching podcast(s)")
+    parser.add_argument('--episodes', type=int, default=1, help="The number of episode(s) to fetch for the matching podcast(s); 1 by default")
+    parser.add_argument("--skip-feed", action="store_true", help="Skip the initial step of downloading the RSS feeds")
+    parser.add_argument("--no-feed", action="store_true", dest="skip_feed", help="As per --skip-feed")
+    parser.add_argument("--skip-download", action="store_true", help="Skip downloading podcast episodes")
+    parser.add_argument("--no-download", action="store_true", dest="skip_download", help="As per --skip-download")
+    parser.add_argument("--skip-gen", action="store_true", help="Skip generating transcripts and translations of podcast episodes")
+    parser.add_argument("--no-gen", action="store_true", dest="skip_gen", help="As per --skip-gen")
+    parser.add_argument("--verbose", action="store_true", help="Output a detailed report of actions as they are being taken")
+    parser.add_argument("--vosk", action="store_true", help="Use Vosk instead of Whisper to generate transcripts")
+    old_help = parser.print_help
+    parser.print_help = rewireHelp(old_help)
+    args = parser.parse_args()
     opts = Options()
-    for arg in sys.argv[1:]:
-        if arg == 'help' or arg =='--help':
-            outputHelp()
-            sys.exit(0)
-        elif arg == '--no-feed' or arg == '--skip-feed':
-            opts.loadFeed = False
-        elif arg == '--no-download' or arg == '--skip-download':
-            opts.downloadEpisodes = False
-        elif arg == "--no-gen" or arg == "--skip-gen":
-            opts.generate = False
-        elif arg == "--verbose":
-            opts.verbose = True
-        elif arg == '--vosk':
-            opts.tts = 'vosk'
-        elif arg == 'new':
-            opts.episodes = 'new'
-        elif arg == 'old':
-            opts.episodes = 'old'
-        elif isNumber.match(arg):
-            opts.numEpisodes = int(arg)
-        elif opts.filter == None and arg[0:2] != '--':
-            opts.filter = arg.lower()
-        else:
-            print(f"Unrecognised argument: {arg}")
-            print("")
-            outputHelp()
-            sys.exit(1)
+    opts.filter = args.filter
+    opts.episodes = args.age
+    opts.numEpisodes = args.episodes
+    opts.loadFeed = not args.skip_feed
+    opts.downloadEpisodes = not args.skip_download
+    opts.generate = not args.skip_gen
+    opts.verbose = args.verbose
+    if args.vosk:
+        opts.tts = 'vosk'
     return opts
