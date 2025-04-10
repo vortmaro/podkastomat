@@ -9,6 +9,7 @@ class Options:
     episodes = 'new'
     numEpisodes = 1
     tts = 'whisper'
+    whisperPath = 'whisper'
 
 def rewireHelp(original_help):
     def newHelp():
@@ -34,6 +35,7 @@ def read():
     parser.add_argument("--no-gen", action="store_true", dest="skip_gen", help="As per --skip-gen")
     parser.add_argument("--verbose", action="store_true", help="Output a detailed report of actions as they are being taken")
     parser.add_argument("--vosk", action="store_true", help="Use Vosk instead of Whisper to generate transcripts")
+    parser.add_argument("--whisper", default='whisper', help="Path to the whisper executable; defaults to 'whisper'")
     old_help = parser.print_help
     parser.print_help = rewireHelp(old_help)
     args = parser.parse_args()
@@ -45,6 +47,7 @@ def read():
     opts.downloadEpisodes = not args.skip_download
     opts.generate = not args.skip_gen
     opts.verbose = args.verbose
+    opts.whisperPath = args.whisper
     if args.vosk:
         opts.tts = 'vosk'
     return opts

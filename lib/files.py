@@ -134,7 +134,7 @@ def generateFromAudio(audioFile, task, options):
         cmd = f"vosk-transcriber -i {fileName} -l {langCode} -t srt -o {newFileName}"
         os.system(cmd)
     else:
-        cmd = f"whisper {fileName} --model medium --language {langCode} --task {task} --output_format srt --fp16 False"
+        cmd = f"{options.whisperPath} {fileName} --model medium --language {langCode} --task {task} --output_format srt --fp16 False"
         os.system(cmd)
 
         # rename transcript/translation file generated
