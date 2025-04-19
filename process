@@ -4,7 +4,9 @@ import lib.args as args
 import lib.config as cfg
 import lib.files as files
 import lib.rss as rss
+import os
 
+os.chdir(os.path.dirname(__file__))
 config = cfg.load()
 options = args.read()
 
