@@ -6,6 +6,8 @@ import lib.files as files
 import lib.rss as rss
 import os
 
+print("Starting process...", flush=True)
+
 os.chdir(os.path.dirname(__file__))
 config = cfg.load()
 options = args.read()
@@ -25,6 +27,8 @@ for podcast in config['podcasts']:
 if not options.generate:
     exit(0)
 audioFiles = files.findAudio()
+print("Audio files found: ", len(audioFiles), flush=True)
+
 for audioFile in audioFiles:
     audioLength = files.getAudioLength(audioFile)
     language = files.getLangCode(audioFile)
@@ -35,6 +39,7 @@ for audioFile in audioFiles:
         skipped = False
         print(f"Transcribing audio: {audioFile} ({audioLength})", flush=True)
         files.generateFromAudio(audioFile, 'transcribe', options)
+        print(f"Finished transcribing {audioFile}", flush=True)
 
     # Generate translation
     if (language in config['translate'] and not files.hasTranslation(audioFile)
@@ -43,6 +48,7 @@ for audioFile in audioFiles:
         skipped = False
         print(f"Translating audio: {audioFile} ({audioLength})", flush=True)
         files.generateFromAudio(audioFile, 'translate', options)
+        print(f"Finished translating {audioFile}", flush=True)
 
     # Generate HTML variant of transcript
     if files.hasTranscript(audioFile) and not files.hasHtml(audioFile):
