@@ -60,7 +60,7 @@ It may be worth running the `process` script overnight, e.g. as a cron job (see 
 To read the transcript using [Vortmaro](https://vortmaro.org/), you can start a local server in Python by running:
 
 ```sh
-python3 -m http.server
+python3 -m http.server --directory podcasts
 ```
 
 This will report what URL it is running on, e.g. `http://localhost:8000/`.
