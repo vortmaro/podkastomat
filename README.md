@@ -55,7 +55,7 @@ Feel free to edit the `config.json` file
 ## Notes
 
 Whisper (used by default for transcriptions and translations) is quite slow and resource intensive.  
-It may be worth running the `process` script overnight, e.g. as a cron job.
+It may be worth running the `process` script overnight, e.g. as a cron job (see below).
 
 To read the transcript using [Vortmaro](https://vortmaro.org/), you can start a local server in Python by running:
 
@@ -66,3 +66,23 @@ python3 -m http.server
 This will report what URL it is running on, e.g. `http://localhost:8000/`.
 
 Open the URL in a web browser, and navigate to the HTML transcript of the relevant episode.
+
+## Cron notes
+
+When the `process` script finishes, it displays a popup message (using Zenity) about which
+podcasts were transcribed.
+
+To have this popup message work in a cron context, add the following at the top of your crontab
+(`crontab -e`), replacing `MY_USER` with your username.
+(If you're new to Linux, you can check this by running `whoami` or `pwd`, for example)
+
+```crontab
+DISPLAY=":0.0"
+XAUTHORITY="/home/MY_USER/.Xauthority"
+```
+
+You can use something like the following entry to run the process at 1am each day
+
+```crontab
+0 1 * * * ~/git/kastomat/process --whisper=~/.local/bin/whisper >> ~/git/kastomat/kastomat.log 2>&1
+```
