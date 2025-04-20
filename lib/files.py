@@ -155,7 +155,8 @@ def generateHtml(audioFilename, options):
     transcriptFile.close()
 
     paragraphs = data.split('\n\n')
-    html = f"<!DOCTYPE html><html lang=\"{langCode}\"><body>"
+    html = f"<!DOCTYPE html>\n<html lang=\"{langCode}\">\n"
+    html += "<head>\n    <meta charset=\"utf-8\">\n</head>\n<body>\n"
     if len(paragraphs) == 1:
         html += '<p>' + paragraphs[0].replace('\n', '<br>\n') + '</p>\n'
     else:
