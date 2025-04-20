@@ -84,5 +84,5 @@ XAUTHORITY="/home/MY_USER/.Xauthority"
 You can use something like the following entry to run the process at 1am each day
 
 ```crontab
-0 1 * * * ~/git/kastomat/process --whisper=~/.local/bin/whisper >> ~/git/kastomat/kastomat.log 2>&1
+0 1 * * * ~/git/podkastomat/process --whisper=~/.local/bin/whisper >> ~/git/podkastomat/podkastomat.log 2>&1
 ```
