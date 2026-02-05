@@ -14,6 +14,6 @@ def load():
 
 def save(configData):
     configFile = open('config.json', 'w', encoding='utf-8')
-    json.dump(configData, configFile, indent=4)
+    json.dump(configData, configFile, indent=4, ensure_ascii=False)
     configFile.write('\n')
     configFile.close()
